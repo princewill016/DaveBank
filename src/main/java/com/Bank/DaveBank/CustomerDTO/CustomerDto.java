@@ -18,12 +18,10 @@ public class CustomerDto {
    private String lastName;
    private String otherName;
    private String gender;
-   private BigDecimal accountBalance;
+   private String email;
    private String address;
    private String phoneNumber;
-   private String accountStatus;
    private String stateOfOrigin;
-   private String accountNumber;
    private String nextOfKin;
    private String nextOfKinPhone;
 }

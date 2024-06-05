@@ -23,6 +23,7 @@ private String firstName;
 private String lastName;
 private String otherName;
 private String gender;
+private String email;
 private BigDecimal accountBalance;
 private String address;
 private String phoneNumber;

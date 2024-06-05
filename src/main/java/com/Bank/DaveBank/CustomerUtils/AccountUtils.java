@@ -1,11 +1,12 @@
 package com.Bank.DaveBank.CustomerUtils;
 
+import org.springframework.context.annotation.Configuration;
+
 import java.time.Year;
 import java.util.Random;
 
+@Configuration
 public class AccountUtils {
-   public static final String STATUS_CODE= "001";
-   public static final String STATUS_MESSAGE= "Account created successfully";
 
 
    public static String generateAccountNumber() {
