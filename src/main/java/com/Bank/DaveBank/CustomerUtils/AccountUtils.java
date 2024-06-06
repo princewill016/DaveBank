@@ -8,7 +8,8 @@ import java.util.Random;
 @Configuration
 public class AccountUtils {
 
-
+public  static  final String  RESPONSE = "001";
+public  static  final String  RESPONSE_MESSAGE = "Account created successfully";
    public static String generateAccountNumber() {
       int currentYear = Year.now().getValue();
       Random random = new Random();

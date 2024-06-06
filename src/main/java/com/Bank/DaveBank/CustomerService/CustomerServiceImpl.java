@@ -8,6 +8,8 @@ import com.Bank.DaveBank.CustomerUtils.AccountUtils;
 import com.Bank.DaveBank.CustomerUtils.BankResponse;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerServiceImpl implements  CustomerService{
+   private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
    @Autowired
    private AccountUtils accountUtils;
 
@@ -45,15 +48,16 @@ public class CustomerServiceImpl implements  CustomerService{
     Customer savedCustomer  =   customerRepository.save(newCustomer);
 
       String accountName = savedCustomer.getFirstName() + " " + savedCustomer.getLastName() + " " + savedCustomer.getOtherName();
-
+      logger.info("Creating account for: {}", customerDto);
       return BankResponse.builder()
-            .responseCode("001")
-            .responseMessage("Account Created Successfully")
+            .responseCode(AccountUtils.RESPONSE)
+            .responseMessage(AccountUtils.RESPONSE_MESSAGE)
             .accountInfo(AccountInfo.builder()
                   .accountName(accountName)
-                  .accountBalance(savedCustomer.getAccountBalance())
                   .accountNumber(savedCustomer.getAccountNumber())
+                  .accountBalance(savedCustomer.getAccountBalance())
                   .build())
             .build();
+
    }
 }
