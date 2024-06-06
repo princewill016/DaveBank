@@ -6,12 +6,16 @@ import com.Bank.DaveBank.CustomerRepository.CustomerRepository;
 import com.Bank.DaveBank.CustomerUtils.AccountInfo;
 import com.Bank.DaveBank.CustomerUtils.AccountUtils;
 import com.Bank.DaveBank.CustomerUtils.BankResponse;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class CustomerServiceImpl implements  CustomerService{
    @Autowired
    private AccountUtils accountUtils;
@@ -27,7 +31,7 @@ public class CustomerServiceImpl implements  CustomerService{
             .firstName(customerDto.getFirstName())
             .lastName(customerDto.getLastName())
             .otherName(customerDto.getOtherName())
-            .accountBalance(BigDecimal.valueOf(0.00))
+            .accountBalance(BigDecimal.ZERO)
             .accountNumber(AccountUtils.generateAccountNumber())
             .accountStatus("Active")
             .address(customerDto.getAddress())
@@ -38,19 +42,18 @@ public class CustomerServiceImpl implements  CustomerService{
             .stateOfOrigin(customerDto.getStateOfOrigin())
             .nextOfKinPhone(customerDto.getNextOfKinPhone())
             .build();
-      customerRepository.save(newCustomer);
+    Customer savedCustomer  =   customerRepository.save(newCustomer);
 
-      String accountName = customerDto.getFirstName() + " " + customerDto.getLastName() + " " + customerDto.getOtherName();
-      String accountNumber = AccountUtils.generateAccountNumber();
-      AccountInfo accountInfo = AccountInfo.builder()
-            .accountName(accountName)
-            .accountNumber(accountNumber)
-            .accountBalance("0.00")
-            .build();
+      String accountName = savedCustomer.getFirstName() + " " + savedCustomer.getLastName() + " " + savedCustomer.getOtherName();
+
       return BankResponse.builder()
             .responseCode("001")
             .responseMessage("Account Created Successfully")
-            .accountInfo(accountInfo)
+            .accountInfo(AccountInfo.builder()
+                  .accountName(accountName)
+                  .accountBalance(savedCustomer.getAccountBalance())
+                  .accountNumber(savedCustomer.getAccountNumber())
+                  .build())
             .build();
    }
 }

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,6 +16,6 @@ import org.springframework.context.annotation.Configuration;
 public class AccountInfo {
    private  String accountName;
    private  String accountNumber;
-   private String accountBalance;
+   private BigDecimal accountBalance;
 
 }

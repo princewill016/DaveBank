@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "Customer details")
 public class Customer {
    @Id
-   @GeneratedValue(strategy = GenerationType.UUID)
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
 private String id;
 private String firstName;
 private String lastName;
