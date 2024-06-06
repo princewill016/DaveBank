@@ -14,8 +14,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Configuration
 public class AccountInfo {
-   private  String accountName;
-   private  String accountNumber;
+   private String accountName;
+   private String accountNumber;
+   private String accountID;
    private BigDecimal accountBalance;
 
 }

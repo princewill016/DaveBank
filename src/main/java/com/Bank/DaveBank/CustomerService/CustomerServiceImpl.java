@@ -8,12 +8,14 @@ import com.Bank.DaveBank.CustomerUtils.AccountInfo;
 import com.Bank.DaveBank.CustomerUtils.AccountUtils;
 import com.Bank.DaveBank.CustomerUtils.BankResponse;
 import com.Bank.DaveBank.CustomerUtils.EmailService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -38,7 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
       Customer savedCustomer = customerRepository.save(newCustomer);
       String cusDetail = savedCustomer.getFirstName() + " " + savedCustomer.getLastName() + " " + savedCustomer.getOtherName() + "\n" + savedCustomer.getAccountNumber() + "\n" + savedCustomer.getId() + "\n " + savedCustomer.getCreatedAt();
       emailService.sendEmail(savedCustomer.getEmail(), "Bank Account Created Successfully", " Welcome to Our banking Platform...Thank You for Banking with us find your account details below" + "\n " + cusDetail);
-      return BankResponse.builder().responseCode(AccountUtils.RESPONSE).responseMessage(AccountUtils.RESPONSE_MESSAGE).accountInfo(AccountInfo.builder().accountName(savedCustomer.getFirstName() + " " + savedCustomer.getLastName() + " " + savedCustomer.getOtherName()).accountNumber(savedCustomer.getAccountNumber()).accountBalance(savedCustomer.getAccountBalance()).build()).build();
+      return BankResponse.builder().responseCode(AccountUtils.RESPONSE).responseMessage(AccountUtils.RESPONSE_MESSAGE).accountInfo(AccountInfo.builder().accountName(savedCustomer.getFirstName() + " " + savedCustomer.getLastName() + " " + savedCustomer.getOtherName()).accountNumber(savedCustomer.getAccountNumber()).accountID(savedCustomer.getId()).accountBalance(savedCustomer.getAccountBalance()).build()).build();
 
    }
 
@@ -73,13 +75,11 @@ public class CustomerServiceImpl implements CustomerService {
          return "Amount to credit cannot be null or empty";
       }
       Customer getAccToCredit = getAccToCreditOpt.get();
-
       BigDecimal currentBalance = getAccToCredit.getAccountBalance();
       BigDecimal amountToCredit = new BigDecimal(creditDebit.getAmount());
       BigDecimal newBalance = currentBalance.add(amountToCredit);
       getAccToCredit.setAccountBalance(newBalance);
       customerRepository.save(getAccToCredit);
-
       return "Account credited successfully. New balance: " + newBalance;
    }
 
@@ -120,13 +120,59 @@ public class CustomerServiceImpl implements CustomerService {
       Customer getAccToCredit = getAccToCreditOpt.get();
       Customer getAccToDebit = getAccToDebitOpt.get();
       if(getAccToDebit.getAccountBalance().compareTo(amount) < 0) {
-         return "Insufficient balance in for this Transaction";
+         return "Insufficient balance for this Transaction";
       }
       getAccToCredit.setAccountBalance(getAccToCredit.getAccountBalance().add(amount));
       getAccToDebit.setAccountBalance(getAccToDebit.getAccountBalance().subtract(amount));
       customerRepository.save(getAccToCredit);
       customerRepository.save(getAccToDebit);
       return "Transfer successful. Your  current account balance: " + "N" + getAccToDebit.getAccountBalance();
+   }
+
+   @Override
+   public String deleteAcc(String id) {
+      Optional<Customer> accToDel = customerRepository.findById(id);
+      if(accToDel.isEmpty()) {
+         return "There is no Account with that ID";
+      }
+      customerRepository.deleteById(id);
+      return "account deleted successfully";
+   }
+
+   @Override
+   @Transactional
+   public String updateAccount(String id, String firstName, String lastName, String otherName, String email, String address, String phoneNumber, String stateOfOrigin, String nextOfKin, String nextOfKinPhone) {
+      Customer customer = customerRepository.findById(id).orElseThrow(() -> new IllegalStateException("Your ID is Incorrect"));
+      if(firstName != null && ! firstName.isEmpty() && ! Objects.equals(customer.getFirstName(), firstName)) {
+         customer.setFirstName(firstName);
+      }
+      if(lastName != null && ! lastName.isEmpty() && ! Objects.equals(customer.getLastName(), lastName)) {
+         customer.setLastName(lastName);
+      }
+      if(otherName != null && ! otherName.isEmpty() && ! Objects.equals(customer.getOtherName(), otherName)) {
+         customer.setFirstName(otherName);
+      }
+      if(email != null && ! email.isEmpty() && ! Objects.equals(customer.getEmail(), email)) {
+         customer.setEmail(email);
+      }
+      if(address != null && ! address.isEmpty() && ! Objects.equals(customer.getAddress(), address)) {
+         customer.setAddress(address);
+      }
+      if(phoneNumber != null && ! phoneNumber.isEmpty() && ! Objects.equals(customer.getPhoneNumber(), phoneNumber)) {
+         customer.setPhoneNumber(phoneNumber);
+      }
+      if(stateOfOrigin != null && ! stateOfOrigin.isEmpty() && ! Objects.equals(customer.getStateOfOrigin(), stateOfOrigin)) {
+         customer.setStateOfOrigin(stateOfOrigin);
+      }
+      if(nextOfKinPhone != null && ! nextOfKinPhone.isEmpty() && ! Objects.equals(customer.getNextOfKinPhone(), nextOfKinPhone)) {
+         customer.setNextOfKinPhone(nextOfKinPhone);
+      }
+      if(nextOfKinPhone != null && ! nextOfKinPhone.isEmpty() && ! Objects.equals(customer.getNextOfKinPhone(), nextOfKinPhone)) {
+         customer.setNextOfKinPhone(nextOfKinPhone);
+      }
+      customerRepository.save(customer);
+      emailService.sendEmail(customer.getEmail(), "Update successful", "You have successfully updated your bank Account!");
+      return "Update successful\", \"You have successfully updated your bank Account!";
    }
 
 }
