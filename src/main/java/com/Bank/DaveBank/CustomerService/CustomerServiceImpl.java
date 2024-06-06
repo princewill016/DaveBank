@@ -1,6 +1,7 @@
 package com.Bank.DaveBank.CustomerService;
 
 import com.Bank.DaveBank.CustomerDTO.CustomerDto;
+import com.Bank.DaveBank.CustomerEntity.CreditDebit;
 import com.Bank.DaveBank.CustomerEntity.Customer;
 import com.Bank.DaveBank.CustomerRepository.CustomerRepository;
 import com.Bank.DaveBank.CustomerUtils.AccountInfo;
@@ -92,6 +93,20 @@ public class CustomerServiceImpl implements  CustomerService{
       return  ( accDetail.getAccountBalance()).toString();
    }
 
+   @Override
+   public String creditAcc(CreditDebit creditDebit) {
+      Optional<Customer> getAccToCreditOpt = customerRepository.findByAccountNumber(creditDebit.getAccountToCredit());
+      if (getAccToCreditOpt.isEmpty()) {
+         return "Account not found";
+      }
+      Customer getAccToCredit = getAccToCreditOpt.get();
+      BigDecimal currentBalance = getAccToCredit.getAccountBalance();
+      BigDecimal amountToCredit = new BigDecimal(creditDebit.getAmount());
+      BigDecimal newBalance = currentBalance.add(amountToCredit);
+      getAccToCredit.setAccountBalance(newBalance);
+      customerRepository.save(getAccToCredit);
 
+      return "Account credited successfully. New balance: " + newBalance;
+   }
 
 }

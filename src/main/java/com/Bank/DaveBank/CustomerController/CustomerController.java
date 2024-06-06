@@ -1,6 +1,7 @@
 package com.Bank.DaveBank.CustomerController;
 
 import com.Bank.DaveBank.CustomerDTO.CustomerDto;
+import com.Bank.DaveBank.CustomerEntity.CreditDebit;
 import com.Bank.DaveBank.CustomerService.CustomerService;
 import com.Bank.DaveBank.CustomerUtils.BankResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,10 @@ public class CustomerController {
    public BankResponse createAccount( @RequestBody CustomerDto customerDto){
       return customerService.createAccount(customerDto);
    }
-
+   @PostMapping("/creditAcc")
+   public String creditAcc( @RequestBody CreditDebit creditDebit){
+      return customerService.creditAcc(creditDebit);
+   }
    @GetMapping (path = "{accountName}")
    public String  getAccName(@PathVariable("accountName") String accountNumber ){
       return customerService.getAccName(accountNumber);
