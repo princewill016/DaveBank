@@ -6,6 +6,7 @@ import com.Bank.DaveBank.CustomerRepository.CustomerRepository;
 import com.Bank.DaveBank.CustomerUtils.AccountInfo;
 import com.Bank.DaveBank.CustomerUtils.AccountUtils;
 import com.Bank.DaveBank.CustomerUtils.BankResponse;
+import com.Bank.DaveBank.CustomerUtils.EmailService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
@@ -24,6 +25,9 @@ public class CustomerServiceImpl implements  CustomerService{
    private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
    @Autowired
    private CustomerRepository customerRepository;
+
+   @Autowired
+   private EmailService emailService;
 
 
    @Override
@@ -55,7 +59,8 @@ public class CustomerServiceImpl implements  CustomerService{
             .nextOfKinPhone(customerDto.getNextOfKinPhone())
             .build();
     Customer savedCustomer  =   customerRepository.save(newCustomer);
-    ;
+    String cusDetail =  savedCustomer.getFirstName() + " " + savedCustomer.getLastName() + " " + savedCustomer.getOtherName() + "\n" + savedCustomer.getAccountNumber()+  "\n" +  savedCustomer.getId() +  "\n " + savedCustomer.getCreatedAt();
+     emailService.sendEmail(savedCustomer.getEmail(),"Bank Account Created Successfully", " Welcome to Our banking Platform...Thank You for Banking with us find your account details below" +  "\n " + cusDetail );
       logger.info("Creating account for: {}", customerDto);
       return BankResponse.builder()
             .responseCode(AccountUtils.RESPONSE)
@@ -70,25 +75,13 @@ public class CustomerServiceImpl implements  CustomerService{
    }
 
    @Override
-   public BankResponse getAccDetail(String accountNumber) {
+   public String getAccDetail(String accountNumber) {
       Optional<Customer> accDetailOpt = customerRepository.findByAccountNumber(accountNumber);
-
       if (accDetailOpt.isEmpty()) {
-         return BankResponse.builder()
-               .responseCode("404")
-               .responseMessage("Account not found")
-               .build();
+         return "Account Not found";
       }
-
       Customer accDetail = accDetailOpt.get();
-      return BankResponse.builder()
-            .responseCode("002")
-            .responseMessage("Account found")
-            .accountInfo(AccountInfo.builder()
-                  .accountName(accDetail.getFirstName() + " " + accDetail.getLastName() + " " + accDetail.getOtherName())
-                  .accountNumber(accDetail.getAccountNumber())
-                  .build())
-            .build();
+      return   accDetail.getFirstName() + " " + accDetail.getLastName() + " " + accDetail.getOtherName();
    }
 
 }

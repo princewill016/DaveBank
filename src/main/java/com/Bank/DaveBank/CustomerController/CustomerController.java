@@ -20,7 +20,7 @@ public class CustomerController {
    }
 
    @GetMapping (path = "{accountNumber}")
-   public BankResponse  getAccDetail(@PathVariable("accountNumber") String accountNumber ){
+   public String  getAccDetail(@PathVariable("accountNumber") String accountNumber ){
       return customerService.getAccDetail(accountNumber);
    }
 
