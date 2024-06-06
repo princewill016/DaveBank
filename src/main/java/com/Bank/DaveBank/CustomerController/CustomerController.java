@@ -19,9 +19,12 @@ public class CustomerController {
       return customerService.createAccount(customerDto);
    }
 
-   @GetMapping (path = "{accountNumber}")
-   public String  getAccDetail(@PathVariable("accountNumber") String accountNumber ){
-      return customerService.getAccDetail(accountNumber);
+   @GetMapping (path = "{accountName}")
+   public String  getAccName(@PathVariable("accountName") String accountNumber ){
+      return customerService.getAccName(accountNumber);
+   }  @GetMapping (path = "/bal/{accountBalance}")
+   public String  getAccBal(@PathVariable("accountBalance") String accountNumber ){
+      return customerService.getAccBal(accountNumber);
    }
 
 

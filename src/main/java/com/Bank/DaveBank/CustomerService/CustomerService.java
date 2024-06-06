@@ -11,5 +11,6 @@ import java.util.List;
 public interface CustomerService {
    BankResponse createAccount(CustomerDto customerDto);
 
-   String getAccDetail(String accountNumber);
+   String getAccName(String accountNumber);
+   String getAccBal(String accountNumber);
 }

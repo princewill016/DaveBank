@@ -75,13 +75,23 @@ public class CustomerServiceImpl implements  CustomerService{
    }
 
    @Override
-   public String getAccDetail(String accountNumber) {
+   public String getAccName(String accountNumber) {
       Optional<Customer> accDetailOpt = customerRepository.findByAccountNumber(accountNumber);
       if (accDetailOpt.isEmpty()) {
          return "Account Not found";
       }
       Customer accDetail = accDetailOpt.get();
       return   accDetail.getFirstName() + " " + accDetail.getLastName() + " " + accDetail.getOtherName();
+   }   @Override
+   public String getAccBal(String accountNumber) {
+      Optional<Customer> accDetailOpt = customerRepository.findByAccountNumber(accountNumber);
+      if (accDetailOpt.isEmpty()) {
+         return "Account Not found";
+      }
+      Customer accDetail = accDetailOpt.get();
+      return  ( accDetail.getAccountBalance()).toString();
    }
+
+
 
 }
