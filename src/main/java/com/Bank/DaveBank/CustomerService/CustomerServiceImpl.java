@@ -46,14 +46,13 @@ public class CustomerServiceImpl implements  CustomerService{
             .nextOfKinPhone(customerDto.getNextOfKinPhone())
             .build();
     Customer savedCustomer  =   customerRepository.save(newCustomer);
-
-      String accountName = savedCustomer.getFirstName() + " " + savedCustomer.getLastName() + " " + savedCustomer.getOtherName();
+    ;
       logger.info("Creating account for: {}", customerDto);
       return BankResponse.builder()
             .responseCode(AccountUtils.RESPONSE)
             .responseMessage(AccountUtils.RESPONSE_MESSAGE)
             .accountInfo(AccountInfo.builder()
-                  .accountName(accountName)
+                  .accountName( savedCustomer.getFirstName() + " " + savedCustomer.getLastName() + " " + savedCustomer.getOtherName())
                   .accountNumber(savedCustomer.getAccountNumber())
                   .accountBalance(savedCustomer.getAccountBalance())
                   .build())
