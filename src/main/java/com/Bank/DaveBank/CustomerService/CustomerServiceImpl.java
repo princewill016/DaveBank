@@ -24,8 +24,7 @@ public class CustomerServiceImpl implements  CustomerService{
    private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
    @Autowired
    private CustomerRepository customerRepository;
-@Autowired
-private  Customer customer;
+
 
    @Override
    public BankResponse createAccount(CustomerDto customerDto) {
@@ -72,14 +71,22 @@ private  Customer customer;
 
    @Override
    public BankResponse getAccDetail(String accountNumber) {
+      Optional<Customer> accDetailOpt = customerRepository.findByAccountNumber(accountNumber);
 
-      Customer accDetail = customerRepository.findByAccNumber(accountNumber);
+      if (accDetailOpt.isEmpty()) {
+         return BankResponse.builder()
+               .responseCode("404")
+               .responseMessage("Account not found")
+               .build();
+      }
 
+      Customer accDetail = accDetailOpt.get();
       return BankResponse.builder()
             .responseCode("002")
             .responseMessage("Account found")
             .accountInfo(AccountInfo.builder()
                   .accountName(accDetail.getFirstName() + " " + accDetail.getLastName() + " " + accDetail.getOtherName())
+                  .accountNumber(accDetail.getAccountNumber())
                   .build())
             .build();
    }
