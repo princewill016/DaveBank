@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -99,7 +98,12 @@ public class CustomerServiceImpl implements  CustomerService{
       if (getAccToCreditOpt.isEmpty()) {
          return "Account not found";
       }
+      String amountStr = creditDebit.getAmount();
+      if (amountStr == null || amountStr.trim().isEmpty()) {
+         return "Amount to credit cannot be null or empty";
+      }
       Customer getAccToCredit = getAccToCreditOpt.get();
+
       BigDecimal currentBalance = getAccToCredit.getAccountBalance();
       BigDecimal amountToCredit = new BigDecimal(creditDebit.getAmount());
       BigDecimal newBalance = currentBalance.add(amountToCredit);
@@ -107,6 +111,27 @@ public class CustomerServiceImpl implements  CustomerService{
       customerRepository.save(getAccToCredit);
 
       return "Account credited successfully. New balance: " + newBalance;
+   }
+   @Override
+   public String debitAcc(CreditDebit creditDebit) {
+      Optional<Customer> getAccToDebitOpt = customerRepository.findByAccountNumber(creditDebit.getAccountToDebit());
+      if (getAccToDebitOpt.isEmpty()) {
+         return "Account not found";
+      }
+      String amountStr = creditDebit.getAmount();
+      if (amountStr == null || amountStr.trim().isEmpty()) {
+         return "Amount to credit cannot be null or empty";
+      }
+      Customer getAccToDebit = getAccToDebitOpt.get();
+      BigDecimal currentBalance = getAccToDebit.getAccountBalance();
+      BigDecimal amountToDebit = new BigDecimal(creditDebit.getAmount());
+      if(currentBalance.compareTo(amountToDebit)<0){
+             return "insufficient Balance for this transaction";
+      }
+      BigDecimal newBalance = currentBalance.subtract(amountToDebit);
+      getAccToDebit.setAccountBalance(newBalance);
+      customerRepository.save(getAccToDebit);
+      return "Account debited successfully. New balance: " + newBalance;
    }
 
 }
