@@ -5,8 +5,11 @@ import com.Bank.DaveBank.CustomerEntity.Customer;
 import com.Bank.DaveBank.CustomerUtils.BankResponse;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface CustomerService {
-   BankResponse createAccount( CustomerDto customerDto);
+   BankResponse createAccount(CustomerDto customerDto);
 
+   BankResponse getAccDetail(String accountNumber);
 }

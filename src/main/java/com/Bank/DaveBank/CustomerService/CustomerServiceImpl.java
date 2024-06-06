@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +24,8 @@ public class CustomerServiceImpl implements  CustomerService{
    private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
    @Autowired
    private CustomerRepository customerRepository;
+@Autowired
+private  Customer customer;
 
    @Override
    public BankResponse createAccount(CustomerDto customerDto) {
@@ -66,4 +69,19 @@ public class CustomerServiceImpl implements  CustomerService{
             .build();
 
    }
+
+   @Override
+   public BankResponse getAccDetail(String accountNumber) {
+
+      Customer accDetail = customerRepository.findByAccNumber(accountNumber);
+
+      return BankResponse.builder()
+            .responseCode("002")
+            .responseMessage("Account found")
+            .accountInfo(AccountInfo.builder()
+                  .accountName(accDetail.getFirstName() + " " + accDetail.getLastName() + " " + accDetail.getOtherName())
+                  .build())
+            .build();
+   }
+
 }
