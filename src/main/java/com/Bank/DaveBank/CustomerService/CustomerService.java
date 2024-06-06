@@ -13,4 +13,5 @@ public interface CustomerService {
    String getAccBal(String accountNumber);
    String creditAcc(CreditDebit creditDebit);
    String debitAcc(CreditDebit creditDebit);
+   String transfer(CreditDebit creditDebit);
 }

@@ -20,14 +20,19 @@ public class CustomerController {
    @PostMapping("/creditAcc")
    public String creditAcc( @RequestBody CreditDebit creditDebit){
       return customerService.creditAcc(creditDebit);
-   } @PostMapping("/debitAcc")
+   }
+   @PostMapping("/debitAcc")
    public String debitAcc( @RequestBody CreditDebit creditDebit){
       return customerService.debitAcc(creditDebit);
+   }  @PostMapping("/transfer")
+   public String transfer( @RequestBody CreditDebit creditDebit){
+      return customerService.transfer(creditDebit);
    }
    @GetMapping (path = "{accountName}")
    public String  getAccName(@PathVariable("accountName") String accountNumber ){
       return customerService.getAccName(accountNumber);
-   }  @GetMapping (path = "/bal/{accountBalance}")
+   }
+   @GetMapping (path = "/bal/{accountBalance}")
    public String  getAccBal(@PathVariable("accountBalance") String accountNumber ){
       return customerService.getAccBal(accountNumber);
    }
