@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -21,13 +22,19 @@ import java.math.BigDecimal;
 public class CustomerServiceImpl implements  CustomerService{
    private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
    @Autowired
-   private AccountUtils accountUtils;
-
-   @Autowired
    private CustomerRepository customerRepository;
 
    @Override
    public BankResponse createAccount(CustomerDto customerDto) {
+      Optional<Customer> accountExist = customerRepository.findByEmail(customerDto.getEmail());
+
+      if(accountExist.isPresent()){
+         return BankResponse.builder()
+               .responseCode("405")
+               .responseMessage("Account already exist")
+               .accountInfo(null)
+               .build();
+      }
 
       Customer newCustomer = Customer
             .builder()

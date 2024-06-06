@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Builder
 public class BankResponse {
 
-   private  String responseCode;
-   private   String responseMessage;
-   private AccountInfo accountInfo;
+   public  String responseCode;
+   public   String responseMessage;
+   public AccountInfo accountInfo;
 }
