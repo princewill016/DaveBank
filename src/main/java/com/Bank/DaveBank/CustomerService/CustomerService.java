@@ -1,7 +1,7 @@
 package com.Bank.DaveBank.CustomerService;
 
 import com.Bank.DaveBank.CustomerDTO.CustomerDto;
-import com.Bank.DaveBank.CustomerEntity.CreditDebit;
+import com.Bank.DaveBank.CustomerDTO.CreditDebit;
 import com.Bank.DaveBank.CustomerUtils.BankResponse;
 import org.springframework.stereotype.Service;
 

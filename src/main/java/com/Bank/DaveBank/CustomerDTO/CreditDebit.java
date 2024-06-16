@@ -1,4 +1,4 @@
-package com.Bank.DaveBank.CustomerEntity;
+package com.Bank.DaveBank.CustomerDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

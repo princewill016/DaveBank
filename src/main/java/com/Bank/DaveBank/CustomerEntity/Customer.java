@@ -18,23 +18,24 @@ import java.time.LocalDateTime;
 public class Customer {
    @Id
    @GeneratedValue(strategy = GenerationType.UUID)
-private String id;
-private String firstName;
-private String lastName;
-private String otherName;
-private String gender;
-private String email;
-private BigDecimal accountBalance;
-private String address;
-private String phoneNumber;
-private String accountStatus;
-private String stateOfOrigin;
-private String accountNumber;
-private String nextOfKin;
-private String nextOfKinPhone;
-@CreationTimestamp
-private LocalDateTime createdAt;
-@UpdateTimestamp
-private LocalDateTime modifiedAt;
+   private String id;
+   private String firstName;
+   private String lastName;
+   private String otherName;
+   private String gender;
+   private String email;
+   private String password;
+   private BigDecimal accountBalance;
+   private String address;
+   private String phoneNumber;
+   private String accountStatus;
+   private String stateOfOrigin;
+   private String accountNumber;
+   private String nextOfKin;
+   private String nextOfKinPhone;
+   @CreationTimestamp
+   private LocalDateTime createdAt;
+   @UpdateTimestamp
+   private LocalDateTime modifiedAt;
 
 }

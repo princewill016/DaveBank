@@ -1,7 +1,7 @@
 package com.Bank.DaveBank.CustomerService;
 
+import com.Bank.DaveBank.CustomerDTO.CreditDebit;
 import com.Bank.DaveBank.CustomerDTO.CustomerDto;
-import com.Bank.DaveBank.CustomerEntity.CreditDebit;
 import com.Bank.DaveBank.CustomerEntity.Customer;
 import com.Bank.DaveBank.CustomerRepository.CustomerRepository;
 import com.Bank.DaveBank.CustomerUtils.AccountInfo;
@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,6 +29,9 @@ public class CustomerServiceImpl implements CustomerService {
    @Autowired
    private EmailService emailService;
 
+   @Autowired
+   private PasswordEncoder passwordEncoder;
+
    @Override
    public BankResponse createAccount(CustomerDto customerDto) {
       Optional<Customer> accountExist = customerRepository.findByEmail(customerDto.getEmail());
@@ -36,7 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
          return BankResponse.builder().responseCode("405").responseMessage("Account already exist").accountInfo(null).build();
       }
 
-      Customer newCustomer = Customer.builder().firstName(customerDto.getFirstName()).lastName(customerDto.getLastName()).otherName(customerDto.getOtherName()).accountBalance(BigDecimal.ZERO).accountNumber(AccountUtils.generateAccountNumber()).accountStatus("Active").address(customerDto.getAddress()).email(customerDto.getEmail()).gender(customerDto.getGender()).nextOfKin(customerDto.getNextOfKin()).phoneNumber(customerDto.getPhoneNumber()).stateOfOrigin(customerDto.getStateOfOrigin()).nextOfKinPhone(customerDto.getNextOfKinPhone()).build();
+      Customer newCustomer = Customer.builder().firstName(customerDto.getFirstName()).lastName(customerDto.getLastName()).otherName(customerDto.getOtherName()).accountBalance(BigDecimal.ZERO).accountNumber(AccountUtils.generateAccountNumber()).accountStatus("Active").address(customerDto.getAddress()).email(customerDto.getEmail()).gender(customerDto.getGender()).nextOfKin(customerDto.getNextOfKin()).phoneNumber(customerDto.getPhoneNumber()).stateOfOrigin(customerDto.getStateOfOrigin()).password(passwordEncoder.encode(customerDto.getPassword())).nextOfKinPhone(customerDto.getNextOfKinPhone()).build();
       Customer savedCustomer = customerRepository.save(newCustomer);
       String cusDetail = savedCustomer.getFirstName() + " " + savedCustomer.getLastName() + " " + savedCustomer.getOtherName() + "\n" + savedCustomer.getAccountNumber() + "\n" + savedCustomer.getId() + "\n " + savedCustomer.getCreatedAt();
       emailService.sendEmail(savedCustomer.getEmail(), "Bank Account Created Successfully", " Welcome to Our banking Platform...Thank You for Banking with us find your account details below" + "\n " + cusDetail);
@@ -91,7 +95,7 @@ public class CustomerServiceImpl implements CustomerService {
       }
       String amountStr = creditDebit.getAmount();
       if(amountStr == null || amountStr.trim().isEmpty()) {
-         return "Amount to credit cannot be null or empty";
+         return "Amount to debit cannot be null or empty";
       }
       Customer getAccToDebit = getAccToDebitOpt.get();
       BigDecimal currentBalance = getAccToDebit.getAccountBalance();
@@ -114,7 +118,7 @@ public class CustomerServiceImpl implements CustomerService {
       }
       String amountStr = creditDebit.getAmount();
       if(amountStr == null || amountStr.trim().isEmpty()) {
-         return "Amount to credit cannot be null or empty";
+         return "Amount to transfer cannot be null or empty";
       }
       BigDecimal amount = new BigDecimal(creditDebit.getAmount());
       Customer getAccToCredit = getAccToCreditOpt.get();
@@ -174,5 +178,4 @@ public class CustomerServiceImpl implements CustomerService {
       emailService.sendEmail(customer.getEmail(), "Update successful", "You have successfully updated your bank Account!");
       return "Update successful\", \"You have successfully updated your bank Account!";
    }
-
 }
