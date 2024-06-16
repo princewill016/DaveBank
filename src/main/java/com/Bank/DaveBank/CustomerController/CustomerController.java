@@ -1,7 +1,7 @@
 package com.Bank.DaveBank.CustomerController;
 
-import com.Bank.DaveBank.CustomerDTO.CustomerDto;
 import com.Bank.DaveBank.CustomerDTO.CreditDebit;
+import com.Bank.DaveBank.CustomerDTO.CustomerDto;
 import com.Bank.DaveBank.CustomerService.CustomerService;
 import com.Bank.DaveBank.CustomerUtils.BankResponse;
 import org.springframework.beans.factory.annotation.Autowired;
