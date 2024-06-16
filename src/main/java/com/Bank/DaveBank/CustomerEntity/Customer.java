@@ -49,6 +49,6 @@ public class Customer implements UserDetails {
 
    @Override
    public String getUsername() {
-      return "";
+      return this.getEmail();
    }
 }
