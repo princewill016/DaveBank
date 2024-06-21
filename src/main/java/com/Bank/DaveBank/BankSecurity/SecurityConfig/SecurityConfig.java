@@ -64,7 +64,7 @@ public class SecurityConfig {
 
       http.csrf(csrf -> csrf.disable()).authorizeRequests(requests -> {
          try {
-            requests.requestMatchers("BankOperations/createAccount", "/v2/api-docs", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/webjars/**", "/swagger-ui.html", "/swagger-ui/**", "BankOperations/login").permitAll().anyRequest().authenticated().and().sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            requests.requestMatchers("BankOperations/createAccount", "/v2/api-docs", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/webjars/**", "/swagger-ui.html", "/swagger-ui/**", "BankOperations/login", "/actuator", "/actuator/*").permitAll().anyRequest().authenticated().and().sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
          } catch(Exception e) {
             e.printStackTrace();
          }
